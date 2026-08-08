@@ -17,24 +17,24 @@ export interface JikanImages {
 
 export interface JikanGenre {
   mal_id: number;
-  type: string;
+  type?: string;
   name: string;
-  url: string;
+  url?: string;
 }
 
 export interface JikanStudio {
   mal_id: number;
-  type: string;
+  type?: string;
   name: string;
-  url: string;
+  url?: string;
 }
 
 export interface JikanAired {
   from: string | null;
   to: string | null;
   prop: {
-    from: { day: number; month: number; year: number };
-    to: { day: number; month: number; year: number };
+    from: { day: number | null; month: number | null; year: number | null };
+    to: { day: number | null; month: number | null; year: number | null };
   };
   string: string;
 }
@@ -82,15 +82,15 @@ export interface JikanAnime {
 
 export interface JikanEpisode {
   mal_id: number;
-  url: string;
+  url?: string;
   title: string;
-  title_japanese: string | null;
-  title_romanji: string | null;
-  aired: string | null;
-  score: number | null;
-  filler: boolean;
-  recap: boolean;
-  forum_url: string | null;
+  title_japanese?: string | null;
+  title_romanji?: string | null;
+  aired?: string | null;
+  score?: number | null;
+  filler?: boolean;
+  recap?: boolean;
+  forum_url?: string | null;
 }
 
 export interface JikanPagination {

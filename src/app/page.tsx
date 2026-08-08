@@ -4,10 +4,9 @@ import HeroSpotlight from "@/components/home/HeroSpotlight";
 import RecentEpisodes from "@/components/home/RecentEpisodes";
 import TopPopular from "@/components/home/TopPopular";
 import ContinueWatching from "@/components/home/ContinueWatching";
-import HomeFallback from "@/components/home/HomeFallback";
 import { SkeletonHero } from "@/components/ui/SkeletonCard";
 
-export const revalidate = 60;
+export const revalidate = 120; // 2 minutes revalidation
 
 function LoadingSkeleton() {
   return (
@@ -28,50 +27,28 @@ function LoadingSkeleton() {
   );
 }
 
-async function fetchHomeData() {
-  try {
-    const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-    const topRes = await getTopAnime(8).catch(() => null);
-    await delay(500);
-    const seasonRes = await getSeasonNow(1, 16).catch(() => null);
-    await delay(500);
-    const popularRes = await getPopularAnime(10).catch(() => null);
-
-    const topAnime = topRes?.data || [];
-    const seasonAnime = seasonRes?.data || [];
-    const popularAnime = popularRes?.data || [];
-
-    if (topAnime.length === 0 && seasonAnime.length === 0 && popularAnime.length === 0) {
-      return null;
-    }
-
-    return { topAnime, seasonAnime, popularAnime };
-  } catch {
-    return null;
-  }
-}
-
 async function HomeContent() {
-  const data = await fetchHomeData();
+  const [topRes, seasonRes, popularRes] = await Promise.all([
+    getTopAnime(8),
+    getSeasonNow(1, 16),
+    getPopularAnime(10),
+  ]);
 
-  if (!data) {
-    return <HomeFallback />;
-  }
-
-  const { topAnime, seasonAnime, popularAnime } = data;
+  const topAnime = topRes?.data || [];
+  const seasonAnime = seasonRes?.data || [];
+  const popularAnime = popularRes?.data || [];
 
   return (
     <>
-      {topAnime.length > 0 ? (
-        <HeroSpotlight animeList={topAnime.slice(0, 6)} />
-      ) : (
-        <SkeletonHero />
-      )}
+      {/* Hero Spotlight */}
+      {topAnime.length > 0 && <HeroSpotlight animeList={topAnime.slice(0, 6)} />}
 
+      {/* Continue Watching (Client-side localStorage) */}
       <ContinueWatching />
 
+      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
+        {/* Left: Episode Releases */}
         <div className="space-y-10">
           {seasonAnime.length > 0 && (
             <RecentEpisodes animeList={seasonAnime} title="Rilisan Episode Terbaru" />
@@ -79,9 +56,9 @@ async function HomeContent() {
           {topAnime.length > 0 && (
             <RecentEpisodes animeList={topAnime} title="Anime Populer Sedang Tayang" />
           )}
-          {seasonAnime.length === 0 && topAnime.length === 0 && <HomeFallback />}
         </div>
 
+        {/* Right: Top 10 Popular Sidebar */}
         {popularAnime.length > 0 && (
           <aside className="hidden lg:block sticky top-24">
             <TopPopular animeList={popularAnime} />

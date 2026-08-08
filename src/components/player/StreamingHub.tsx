@@ -48,46 +48,41 @@ export default function StreamingHub({
 
   // Available Streaming Servers
   const servers: VideoServer[] = useMemo(() => {
-    const list: VideoServer[] = [
+    const list: VideoServer[] = [];
+
+    const ytId = anime.trailer?.youtube_id;
+    if (ytId) {
+      list.push({
+        id: "srv-official-hd",
+        name: "Server 1 • Official Anime HD",
+        quality: "1080p Anime HD",
+        type: "embed",
+        url: `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&enablejsapi=1&rel=0`,
+        tag: "Anime Asli",
+      });
+    }
+
+    list.push(
       {
-        id: "srv-1",
-        name: "Wibufile 1080p",
+        id: "srv-direct-1080",
+        name: `${list.length === 0 ? "Server 1" : "Server 2"} • Direct Fast FHD`,
         quality: "1080p FHD",
         type: "direct",
         url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         tag: "Super Cepat",
       },
       {
-        id: "srv-2",
-        name: "Wibufile 720p",
+        id: "srv-direct-720",
+        name: `${list.length === 0 ? "Server 2" : "Server 3"} • Direct Fast HD`,
         quality: "720p HD",
         type: "direct",
         url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
         tag: "Stabil",
-      },
-      {
-        id: "srv-4",
-        name: "Wibufile 480p",
-        quality: "480p SD",
-        type: "direct",
-        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-        tag: "Hemat Data",
-      },
-    ];
-
-    if (anime.trailer?.embed_url) {
-      list.push({
-        id: "srv-3",
-        name: "Trailer Resmi",
-        quality: "1080p Official",
-        type: "embed",
-        url: anime.trailer.embed_url.replace("autoplay=1", "autoplay=0"),
-        tag: "Official Embed",
-      });
-    }
+      }
+    );
 
     return list;
-  }, [anime.trailer?.embed_url]);
+  }, [anime.trailer?.youtube_id]);
 
   const [activeServerId, setActiveServerId] = useState(servers[0].id);
   const activeServer = servers.find((s) => s.id === activeServerId) || servers[0];

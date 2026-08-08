@@ -68,8 +68,10 @@ export function useWatchHistory() {
         }
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-        setHistory(list);
-        window.dispatchEvent(new Event(EVENT_NAME));
+        setTimeout(() => {
+          setHistory(list);
+          window.dispatchEvent(new Event(EVENT_NAME));
+        }, 0);
       } catch (e) {
         console.error("Failed to save watch history", e);
       }

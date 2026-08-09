@@ -178,11 +178,20 @@ export default function StreamingHub({
         {/* Left: Video Player & Sub-Controls */}
         <div className="space-y-4">
           {/* Custom Video Player with Quick Server and Sandbox */}
-          {isLoadingServers || !activeServer ? (
+          {isLoadingServers ? (
             <div className="w-full aspect-video bg-black flex items-center justify-center rounded-xl overflow-hidden border border-white/10 shadow-2xl">
               <div className="flex flex-col items-center gap-3">
                 <RefreshCw className="w-8 h-8 text-[#F47521] animate-spin" />
                 <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Mencari Sumber Video...</span>
+              </div>
+            </div>
+          ) : !activeServer ? (
+             <div className="w-full aspect-video bg-[#0a0a0a] flex items-center justify-center rounded-xl overflow-hidden border border-red-500/20 shadow-2xl">
+              <div className="flex flex-col items-center gap-3 text-center px-4">
+                <AlertCircle className="w-10 h-10 text-red-500" />
+                <span className="text-sm font-bold text-zinc-300">SERVER SEDANG GANGGUAN</span>
+                <p className="text-xs text-zinc-500 max-w-xs">Kami tidak dapat memuat video saat ini. Server Otakudesu atau YouTube mungkin sedang memblokir permintaan.</p>
+                <button onClick={() => window.location.reload()} className="mt-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold rounded">Coba Lagi</button>
               </div>
             </div>
           ) : (

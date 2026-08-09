@@ -18,20 +18,45 @@ export async function GET(
   let server2Url = "";
   let server3Url = "";
 
-  try {
-    // 1. Coba fetch Otakudesu (Server Utama)
-    otakudesuUrl = await getOtakudesuStream(title, ep);
+  // Helper untuk membatasi waktu eksekusi fungsi agar tidak terkena Timeout 504 di Vercel
+  const withTimeout = <T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> => {
+    let timeoutId: NodeJS.Timeout;
+    const timeoutPromise = new Promise<T>((resolve) => {
+      timeoutId = setTimeout(() => resolve(fallback), ms);
+    });
+    return Promise.race([
+      promise.then(res => {
+        clearTimeout(timeoutId);
+        return res;
+      }).catch(err => {
+        clearTimeout(timeoutId);
+        console.error("Task failed:", err);
+        return fallback;
+      }), 
+      timeoutPromise
+    ]);
+  };
 
-    // 2. Jalankan pencarian YouTube sebagai fallback (Server Cadangan)
+  try {
+    // 1. Coba fetch Otakudesu (Server Utama) - Maksimal 4 detik
+    otakudesuUrl = await withTimeout(getOtakudesuStream(title, ep), 4000, null);
+
+    // 2. Jalankan pencarian YouTube sebagai fallback (Server Cadangan) - Maksimal 4 detik
     const queries = [
       `${title} episode ${ep} sub indo`,
       `${title} episode ${ep} muse indonesia`,
       `${title} episode ${ep} english sub`,
     ];
 
-    const [res1, res2, res3] = await Promise.all(queries.map(q => ytSearch(q)));
+    const fallbackYt = { videos: [] };
+    const [res1, res2, res3] = await Promise.all([
+      withTimeout(ytSearch(queries[0]), 4000, fallbackYt),
+      withTimeout(ytSearch(queries[1]), 4000, fallbackYt),
+      withTimeout(ytSearch(queries[2]), 4000, fallbackYt)
+    ]);
     
     const filterEpisode = (videos: any[]) => {
+      if (!videos || !Array.isArray(videos)) return null;
       const fullEp = videos.find(v => v.seconds >= 1200 && v.seconds <= 2400);
       return fullEp || (videos.length > 0 ? videos[0] : null);
     };

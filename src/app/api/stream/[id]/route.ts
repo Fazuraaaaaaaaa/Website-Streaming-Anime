@@ -48,7 +48,7 @@ export async function GET(
       `${title} episode ${ep} english sub`,
     ];
 
-    const fallbackYt = { videos: [] };
+    const fallbackYt = { videos: [] } as any;
     const [res1, res2, res3] = await Promise.all([
       withTimeout(ytSearch(queries[0]), 4000, fallbackYt),
       withTimeout(ytSearch(queries[1]), 4000, fallbackYt),

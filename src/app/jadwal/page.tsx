@@ -168,17 +168,17 @@ export default function JadwalPage() {
   return (
     <div className="container-main py-8 space-y-8 animate-fade-in">
       {/* Header Banner */}
-      <div className="bg-[#0d1124] rounded-3xl p-6 sm:p-10 border border-white/10 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="bg-[#23252b] rounded-md p-6 sm:p-10 border border-white/5 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-violet-600/30 text-violet-300 border border-violet-500/40 mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded text-xs font-black uppercase tracking-wider bg-[#F47521] text-black mb-3">
             <Calendar className="w-3.5 h-3.5" />
             <span>JADWAL RILIS ANIME</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-white leading-tight">
+          <h1 className="text-2xl sm:text-4xl font-black text-white uppercase tracking-wider leading-tight">
             Jadwal Tayang Mingguan
           </h1>
-          <p className="text-sm text-slate-400 mt-2 max-w-xl">
-            Simak jadwal penayangan episode anime terbaru setiap harinya lengkap dengan estimasi jam rilis Sub Indo.
+          <p className="text-xs text-zinc-400 font-bold uppercase tracking-wider mt-2 max-w-xl">
+            Simak jadwal penayangan episode anime terbaru setiap harinya lengkap dengan estimasi jam rilis Sub Indo di RafQ Dev.
           </p>
         </div>
       </div>
@@ -191,10 +191,10 @@ export default function JadwalPage() {
             <button
               key={day}
               onClick={() => setActiveDay(day)}
-              className={`px-6 py-3 rounded-2xl text-sm font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 ${
+              className={`px-6 py-3 rounded text-xs font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 ${
                 isActive
-                  ? "bg-violet-600 text-white shadow-lg shadow-violet-600/40 scale-105"
-                  : "bg-[#0d1124] hover:bg-[#121735] text-slate-400 hover:text-white border border-white/5"
+                  ? "bg-[#F47521] text-black shadow-lg shadow-[#F47521]/30"
+                  : "bg-[#23252b] hover:bg-[#2e3038] text-zinc-400 hover:text-white border border-white/5"
               }`}
             >
               {day}
@@ -209,20 +209,20 @@ export default function JadwalPage() {
           <Link
             key={anime.id}
             href={`/anime/${anime.id}`}
-            className="group bg-[#0d1124] hover:bg-[#121735] border border-white/5 hover:border-violet-500/50 rounded-3xl p-4.5 flex gap-4 transition-all duration-300 shadow-xl hover:-translate-y-1"
+            className="group bg-[#23252b] hover:bg-[#2a2c34] border border-white/5 hover:border-[#F47521] rounded p-4 flex gap-4 transition-all duration-200 shadow-xl"
           >
             {/* Poster */}
-            <div className="relative w-24 h-32 rounded-2xl overflow-hidden shrink-0 shadow-lg ring-1 ring-white/10">
+            <div className="relative w-24 h-32 rounded overflow-hidden shrink-0 shadow-lg ring-1 ring-white/10">
               <Image
                 src={anime.image}
                 alt={anime.title}
                 fill
                 sizes="96px"
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                className="object-cover group-hover:scale-105 transition-transform duration-200"
               />
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/0 transition-colors flex items-center justify-center">
-                <div className="w-8 h-8 rounded-full bg-violet-600 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Play className="w-3.5 h-3.5 fill-white ml-0.5" />
+                <div className="w-8 h-8 rounded bg-[#F47521] text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Play className="w-3.5 h-3.5 fill-black ml-0.5" />
                 </div>
               </div>
             </div>
@@ -230,24 +230,24 @@ export default function JadwalPage() {
             {/* Info */}
             <div className="flex-1 min-w-0 flex flex-col justify-between">
               <div>
-                <h3 className="font-bold text-sm text-white group-hover:text-violet-400 transition-colors line-clamp-2 leading-snug">
+                <h3 className="font-black text-sm text-white group-hover:text-[#F47521] transition-colors line-clamp-2 leading-snug">
                   {anime.title}
                 </h3>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="flex items-center gap-1 text-amber-400 font-bold text-xs">
+                  <span className="flex items-center gap-1 text-[#FAB818] font-bold text-xs">
                     <Star className="w-3.5 h-3.5 fill-current" />
                     {formatScore(anime.score)}
                   </span>
-                  <span className="text-slate-500">•</span>
-                  <span className="text-xs text-violet-300 font-semibold">
+                  <span className="text-zinc-500">•</span>
+                  <span className="text-xs text-[#F47521] font-bold uppercase">
                     Episode {anime.episode}
                   </span>
                 </div>
               </div>
 
               {/* Time Badge */}
-              <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-3 pt-2 border-t border-white/5">
-                <Clock className="w-3.5 h-3.5 text-violet-400" />
+              <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-3 pt-2 border-t border-white/5">
+                <Clock className="w-3.5 h-3.5 text-[#F47521]" />
                 <span className="font-bold text-white">{anime.time}</span>
               </div>
             </div>

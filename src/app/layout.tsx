@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import BottomNav from "@/components/layout/BottomNav";
 import "./globals.css";
 
 const inter = Inter({
@@ -12,24 +13,35 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "AnimeHub — Nonton Anime Subtitle Indonesia",
-    template: "%s | AnimeHub",
+    default: "RafQ Dev — Nonton Anime Subtitle Indonesia",
+    template: "%s | RafQ Dev",
   },
   description:
-    "AnimeHub adalah website streaming anime terlengkap dengan database dari MyAnimeList. Temukan dan tonton anime favorit dengan kualitas terbaik.",
+    "RafQ Dev adalah platform streaming anime modern gratis dengan Subtitle Indonesia, multi-server super cepat, skip opening/ending otomatis, jadwal rilis update, dan tanpa iklan mengganggu.",
   keywords: [
-    "anime",
-    "streaming anime",
-    "nonton anime",
+    "RafQ Dev",
     "anime sub indo",
-    "anime terbaru",
+    "streaming anime",
+    "nonton anime sub indo",
     "anime ongoing",
+    "anime terlengkap",
+    "download anime sub indo",
+    "yomi anime",
   ],
+  authors: [{ name: "RafQ Dev" }],
+  creator: "RafQ Dev",
+  publisher: "RafQ Dev",
   openGraph: {
-    title: "AnimeHub — Nonton Anime Subtitle Indonesia",
-    description: "Website streaming anime terlengkap dengan database dari MyAnimeList.",
+    title: "RafQ Dev — Nonton Anime Subtitle Indonesia",
+    description: "Streaming anime sub Indo resolusi tinggi 1080p FHD, 720p HD dengan pemutar modern anti lag.",
     type: "website",
     locale: "id_ID",
+    siteName: "RafQ Dev",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RafQ Dev — Nonton Anime Subtitle Indonesia",
+    description: "Streaming anime sub Indo resolusi tinggi 1080p FHD, 720p HD.",
   },
 };
 
@@ -39,15 +51,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${inter.variable} h-full`} suppressHydrationWarning>
+    <html lang="id" className={`${inter.variable} h-full dark`} suppressHydrationWarning>
       <body
-        className="min-h-full flex flex-col"
-        style={{ background: "var(--bg-primary)" }}
+        className="min-h-full flex flex-col bg-[#090d16] text-[#f1f5f9] antialiased pb-16 md:pb-0"
         suppressHydrationWarning
       >
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
         <Footer />
+        <BottomNav />
       </body>
     </html>
   );

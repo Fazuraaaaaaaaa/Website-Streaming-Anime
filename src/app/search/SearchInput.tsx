@@ -21,16 +21,14 @@ export default function SearchInput({ initialQuery }: SearchInputProps) {
 
   return (
     <form onSubmit={handleSubmit} className="relative max-w-2xl">
-      <div className="flex items-center rounded-xl overflow-hidden transition-all duration-200 focus-within:ring-2 focus-within:ring-violet-500/40"
-           style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}>
-        <Search className="w-5 h-5 ml-4 shrink-0" style={{ color: 'var(--text-muted)' }} />
+      <div className="flex items-center rounded overflow-hidden transition-all duration-200 focus-within:ring-2 focus-within:ring-[#F47521] bg-[#23252b] border border-white/10">
+        <Search className="w-5 h-5 ml-4 shrink-0 text-zinc-400" />
         <input
           type="text"
           placeholder="Cari judul anime..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full bg-transparent px-4 py-3.5 text-base outline-none placeholder:text-slate-500"
-          style={{ color: 'var(--text-primary)' }}
+          className="w-full bg-transparent px-4 py-3.5 text-sm outline-none text-white placeholder:text-zinc-500 font-bold"
           id="search-page-input"
           autoFocus
         />
@@ -38,15 +36,14 @@ export default function SearchInput({ initialQuery }: SearchInputProps) {
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="mr-2 p-1.5 rounded-full hover:bg-white/10 transition-colors"
+            className="mr-2 p-1.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+            <X className="w-4 h-4 text-zinc-400" />
           </button>
         )}
         <button
           type="submit"
-          className="shrink-0 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:opacity-90"
-          style={{ background: 'var(--accent)' }}
+          className="shrink-0 px-6 py-3.5 text-xs font-black uppercase tracking-wider text-black bg-[#F47521] hover:bg-[#FF640A] transition-colors cursor-pointer"
         >
           Cari
         </button>

@@ -29,7 +29,7 @@ export default function ShareModal({
     title || (animeTitle ? `${animeTitle}${episodeNum ? ` Episode ${episodeNum}` : ""}` : "Anime");
   const currentUrl = url || (typeof window !== "undefined" ? window.location.href : "");
   const encodedUrl = encodeURIComponent(currentUrl);
-  const encodedTitle = encodeURIComponent(`Nonton ${displayTitle} Subtitle Indonesia di Mayonime V3!`);
+  const encodedTitle = encodeURIComponent(`Nonton ${displayTitle} Subtitle Indonesia di RafQ Dev!`);
 
   const handleCopy = () => {
     if (typeof navigator !== "undefined") {
@@ -50,33 +50,26 @@ export default function ShareModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-      <div
-        className="relative w-full max-w-md rounded-2xl p-6 shadow-2xl overflow-hidden"
-        style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border)",
-          boxShadow: "0 25px 50px -12px rgba(124, 58, 237, 0.25)",
-        }}
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-md rounded-md p-6 shadow-2xl bg-[#23252b] border border-white/10">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b" style={{ borderColor: "var(--border)" }}>
+        <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg" style={{ background: "var(--accent-soft)" }}>
-              <Share2 className="w-5 h-5" style={{ color: "var(--accent)" }} />
+            <div className="p-2 rounded bg-[#F47521]/15">
+              <Share2 className="w-5 h-5 text-[#F47521]" />
             </div>
             <div>
-              <h3 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
-                Bagikan Anime
+              <h3 className="text-base font-black text-white uppercase tracking-wider">
+                Bagikan Anime (Sub Indo)
               </h3>
-              <p className="text-xs truncate max-w-[240px]" style={{ color: "var(--text-muted)" }}>
-                {title}
+              <p className="text-xs truncate max-w-[240px] text-zinc-400">
+                {displayTitle}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -84,21 +77,21 @@ export default function ShareModal({
 
         {/* Copy Link Input */}
         <div className="py-4">
-          <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>
-            Salin Tautan
+          <label className="block text-xs font-black uppercase tracking-wider mb-2 text-zinc-400">
+            Salin Tautan Streaming
           </label>
-          <div className="flex items-center gap-2 p-1.5 rounded-xl" style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}>
+          <div className="flex items-center gap-2 p-1.5 rounded bg-[#141519] border border-white/10">
             <input
               type="text"
               readOnly
               value={currentUrl}
-              className="flex-1 bg-transparent px-2.5 text-xs focus:outline-none truncate"
-              style={{ color: "var(--text-primary)" }}
+              className="flex-1 bg-transparent px-2.5 text-xs text-white focus:outline-none truncate font-mono"
             />
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:opacity-90 shrink-0 cursor-pointer"
-              style={{ background: copied ? "#10b981" : "var(--accent)" }}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded text-xs font-black uppercase tracking-wider transition-all hover:opacity-90 shrink-0 cursor-pointer ${
+                copied ? "bg-emerald-400 text-black" : "bg-[#F47521] hover:bg-[#FF640A] text-black"
+              }`}
             >
               {copied ? (
                 <>
@@ -115,7 +108,7 @@ export default function ShareModal({
 
         {/* Social Share Buttons */}
         <div className="pb-4">
-          <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>
+          <label className="block text-xs font-black uppercase tracking-wider mb-2 text-zinc-400">
             Bagikan ke Media Sosial
           </label>
           <div className="grid grid-cols-4 gap-2">
@@ -123,60 +116,55 @@ export default function ShareModal({
               href={`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all hover:scale-105"
-              style={{ background: "rgba(37, 211, 102, 0.15)", border: "1px solid rgba(37, 211, 102, 0.3)" }}
+              className="flex flex-col items-center gap-1.5 p-3 rounded transition-all hover:scale-105 bg-emerald-500/10 border border-emerald-500/20 hover:border-emerald-500/40"
             >
               <MessageCircle className="w-5 h-5 text-emerald-400" />
-              <span className="text-[10px] font-medium text-emerald-300">WhatsApp</span>
+              <span className="text-[10px] font-bold text-emerald-300">WhatsApp</span>
             </a>
 
             <a
               href={`https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all hover:scale-105"
-              style={{ background: "rgba(0, 136, 204, 0.15)", border: "1px solid rgba(0, 136, 204, 0.3)" }}
+              className="flex flex-col items-center gap-1.5 p-3 rounded transition-all hover:scale-105 bg-sky-500/10 border border-sky-500/20 hover:border-sky-500/40"
             >
               <Send className="w-5 h-5 text-sky-400" />
-              <span className="text-[10px] font-medium text-sky-300">Telegram</span>
+              <span className="text-[10px] font-bold text-sky-300">Telegram</span>
             </a>
 
             <a
               href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all hover:scale-105"
-              style={{ background: "rgba(29, 161, 242, 0.15)", border: "1px solid rgba(29, 161, 242, 0.3)" }}
+              className="flex flex-col items-center gap-1.5 p-3 rounded transition-all hover:scale-105 bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/40"
             >
               <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
-              <span className="text-[10px] font-medium text-blue-300">Twitter / X</span>
+              <span className="text-[10px] font-bold text-blue-300">Twitter / X</span>
             </a>
 
             <a
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all hover:scale-105"
-              style={{ background: "rgba(66, 103, 178, 0.15)", border: "1px solid rgba(66, 103, 178, 0.3)" }}
+              className="flex flex-col items-center gap-1.5 p-3 rounded transition-all hover:scale-105 bg-indigo-500/10 border border-indigo-500/20 hover:border-indigo-500/40"
             >
               <svg className="w-5 h-5 text-indigo-400" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
               </svg>
-              <span className="text-[10px] font-medium text-indigo-300">Facebook</span>
+              <span className="text-[10px] font-bold text-indigo-300">Facebook</span>
             </a>
           </div>
         </div>
 
         {/* Embed code */}
-        <div className="pt-2 border-t" style={{ borderColor: "var(--border)" }}>
+        <div className="pt-2 border-t border-white/10">
           <button
             onClick={handleCopyEmbed}
-            className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
-            style={{ color: "var(--text-muted)" }}
+            className="w-full flex items-center justify-center gap-2 py-2 text-xs font-bold uppercase text-zinc-400 hover:text-white rounded hover:bg-white/5 transition-colors cursor-pointer"
           >
-            <Code className="w-4 h-4" />
+            <Code className="w-4 h-4 text-[#F47521]" />
             {copiedEmbed ? "Kode Embed Disalin!" : "Salin Kode Embed Player"}
           </button>
         </div>

@@ -32,7 +32,7 @@ export async function GET(
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch anime data" },
-      { status: 500 }
+      { status: 404 }
     );
   }
 }

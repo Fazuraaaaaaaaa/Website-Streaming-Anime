@@ -6,7 +6,6 @@
 // ============================================
 
 import type { JikanAnime, JikanEpisode, JikanResponse, GenreData } from "./types";
-import { FALLBACK_ANIME_LIST, FALLBACK_GENRES } from "./fallbackData";
 import {
   fetchAniListTop,
   fetchAniListSeasonNow,
@@ -117,14 +116,14 @@ export async function getTopAnime(limit = 10): Promise<JikanResponse<JikanAnime[
     return await jikanFetch<JikanResponse<JikanAnime[]>>(`/top/anime?limit=${limit}&filter=airing`);
   } catch {}
 
-  // 3. Fallback Data
+  // 3. Empty Fallback
   return {
-    data: FALLBACK_ANIME_LIST.slice(0, limit),
+    data: [],
     pagination: {
       last_visible_page: 1,
       has_next_page: false,
       current_page: 1,
-      items: { count: FALLBACK_ANIME_LIST.length, total: FALLBACK_ANIME_LIST.length, per_page: limit },
+      items: { count: 0, total: 0, per_page: limit },
     },
   };
 }
@@ -149,15 +148,14 @@ export async function getSeasonNow(
     return await jikanFetch<JikanResponse<JikanAnime[]>>(`/seasons/now?page=${page}&limit=${limit}`);
   } catch {}
 
-  // 3. Fallback Data
-  const shifted = [...FALLBACK_ANIME_LIST].reverse().slice(0, limit);
+  // 3. Empty Fallback
   return {
-    data: shifted,
+    data: [],
     pagination: {
       last_visible_page: 1,
       has_next_page: false,
       current_page: 1,
-      items: { count: shifted.length, total: shifted.length, per_page: limit },
+      items: { count: 0, total: 0, per_page: limit },
     },
   };
 }
@@ -179,14 +177,14 @@ export async function getPopularAnime(limit = 10): Promise<JikanResponse<JikanAn
     return await jikanFetch<JikanResponse<JikanAnime[]>>(`/top/anime?limit=${limit}&filter=bypopularity`);
   } catch {}
 
-  // 3. Fallback Data
+  // 3. Empty Fallback
   return {
-    data: FALLBACK_ANIME_LIST.slice(0, limit),
+    data: [],
     pagination: {
       last_visible_page: 1,
       has_next_page: false,
       current_page: 1,
-      items: { count: FALLBACK_ANIME_LIST.length, total: FALLBACK_ANIME_LIST.length, per_page: limit },
+      items: { count: 0, total: 0, per_page: limit },
     },
   };
 }
@@ -208,22 +206,8 @@ export async function getAnimeById(id: number): Promise<JikanResponse<JikanAnime
     return await jikanFetch<JikanResponse<JikanAnime>>(`/anime/${id}/full`, { revalidate: 1800 });
   } catch {}
 
-  // 3. Check hardcoded fallback list
-  const found = FALLBACK_ANIME_LIST.find((a) => a.mal_id === id);
-  if (found) {
-    return { data: found };
-  }
-
-  // 4. Return synthesized anime object
-  const defaultAnime = FALLBACK_ANIME_LIST[0];
-  return {
-    data: {
-      ...defaultAnime,
-      mal_id: id,
-      title: `Anime #${id}`,
-      title_english: `Anime #${id} — Streaming`,
-    },
-  };
+  // 3. Throw if not found
+  throw new Error(`Anime with ID ${id} not found in any source.`);
 }
 
 /**
@@ -239,14 +223,7 @@ export async function getAnimeEpisodes(
       { revalidate: 1800 }
     );
   } catch {
-    const anime = FALLBACK_ANIME_LIST.find((a) => a.mal_id === id) || FALLBACK_ANIME_LIST[0];
-    const totalEp = anime.episodes || 12;
-    const episodes: JikanEpisode[] = Array.from({ length: Math.min(totalEp, 24) }, (_, i) => ({
-      mal_id: i + 1,
-      title: `Episode ${i + 1}`,
-      filler: false,
-    }));
-    return { data: episodes };
+    return { data: [] };
   }
 }
 
@@ -274,21 +251,14 @@ export async function searchAnime(
     );
   } catch {}
 
-  // 3. Fallback filter
-  const q = query.toLowerCase();
-  const filtered = FALLBACK_ANIME_LIST.filter(
-    (a) =>
-      a.title.toLowerCase().includes(q) ||
-      (a.title_english && a.title_english.toLowerCase().includes(q)) ||
-      a.genres.some((g) => g.name.toLowerCase().includes(q))
-  );
+  // 3. Empty Fallback
   return {
-    data: filtered.length > 0 ? filtered : FALLBACK_ANIME_LIST.slice(0, limit),
+    data: [],
     pagination: {
       last_visible_page: 1,
       has_next_page: false,
       current_page: 1,
-      items: { count: filtered.length, total: filtered.length, per_page: limit },
+      items: { count: 0, total: 0, per_page: limit },
     },
   };
 }
@@ -317,14 +287,14 @@ export async function getAnimeByStatus(
     );
   } catch {}
 
-  // 3. Fallback Data
+  // 3. Empty Fallback
   return {
-    data: FALLBACK_ANIME_LIST.slice(0, limit),
+    data: [],
     pagination: {
       last_visible_page: 1,
       has_next_page: false,
       current_page: 1,
-      items: { count: FALLBACK_ANIME_LIST.length, total: FALLBACK_ANIME_LIST.length, per_page: limit },
+      items: { count: 0, total: 0, per_page: limit },
     },
   };
 }
@@ -336,7 +306,7 @@ export async function getAnimeGenres(): Promise<JikanResponse<GenreData[]>> {
   try {
     return await jikanFetch<JikanResponse<GenreData[]>>(`/genres/anime`, { revalidate: 86400 });
   } catch {
-    return { data: FALLBACK_GENRES };
+    return { data: [] };
   }
 }
 
@@ -348,8 +318,7 @@ export async function getAnimeByGenre(
   page = 1,
   limit = 20
 ): Promise<JikanResponse<JikanAnime[]>> {
-  const genreObj = FALLBACK_GENRES.find((g) => g.mal_id === genreId);
-  const genreName = genreObj ? genreObj.name : null;
+  const genreName = null;
 
   // Try AniList by genre name if available
   if (genreName) {
@@ -402,16 +371,13 @@ export async function getAnimeByGenre(
       { revalidate: 600 }
     );
   } catch {
-    const filtered = FALLBACK_ANIME_LIST.filter((a) =>
-      a.genres.some((g) => g.mal_id === genreId)
-    );
     return {
-      data: filtered.length > 0 ? filtered : FALLBACK_ANIME_LIST.slice(0, limit),
+      data: [],
       pagination: {
         last_visible_page: 1,
         has_next_page: false,
         current_page: 1,
-        items: { count: filtered.length, total: filtered.length, per_page: limit },
+        items: { count: 0, total: 0, per_page: limit },
       },
     };
   }
@@ -429,9 +395,8 @@ export async function getAnimeRecommendations(
       { revalidate: 3600 }
     );
   } catch {
-    const others = FALLBACK_ANIME_LIST.filter((a) => a.mal_id !== id).slice(0, 6);
     return {
-      data: others.map((anime) => ({ entry: anime })),
+      data: [],
     };
   }
 }

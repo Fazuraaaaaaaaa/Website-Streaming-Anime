@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark, ShieldCheck, Zap } from "lucide-react";
+import { Server, Zap, ShieldCheck } from "lucide-react";
 import { VideoServer } from "@/lib/types";
 
 interface ServerSelectorProps {
@@ -14,89 +14,70 @@ export default function ServerSelector({
   activeServerId,
   onSelectServer,
 }: ServerSelectorProps) {
-  const activeServer = servers.find((s) => s.id === activeServerId) || servers[0];
-
-  // Quality groups: 480P, 720P, 1080P
-  const qualityRows = [
-    {
-      label: "480P",
-      servers: [
-        { id: "srv-4", name: "Wibufile 480p", provider: "Wibufile" },
-        { id: "srv-mega-480", name: "Mega 480p", provider: "Mega" },
-      ],
-    },
-    {
-      label: "720P",
-      servers: [
-        { id: "srv-2", name: "Wibufile 720p", provider: "Wibufile" },
-        { id: "srv-mega-720", name: "Mega 720p", provider: "Mega" },
-      ],
-    },
-    {
-      label: "1080P",
-      servers: [
-        { id: "srv-1", name: "Wibufile 1080p", provider: "Wibufile" },
-        { id: "srv-mega-1080", name: "Mega 1080p", provider: "Mega" },
-      ],
-    },
-  ];
-
   return (
-    <div className="bg-[#0d1124] rounded-3xl p-6 border border-white/10 shadow-2xl space-y-5">
+    <div className="bg-[#23252b] rounded-md p-5 border border-white/5 shadow-xl space-y-4">
       {/* Header */}
-      <div className="flex items-center gap-2.5 pb-2 border-b border-white/5">
-        <Bookmark className="w-5 h-5 text-violet-400" />
-        <h3 className="text-base font-black tracking-wider uppercase text-white">
-          Pilihan Server Kualitas
-        </h3>
+      <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="flex items-center gap-2.5">
+          <Server className="w-5 h-5 text-[#F47521]" />
+          <h3 className="text-sm font-black tracking-wider uppercase text-white">
+            Pilihan Server Streaming (Sub Indo)
+          </h3>
+        </div>
+        <span className="text-[11px] text-[#F47521] font-bold flex items-center gap-1 uppercase tracking-wider">
+          <Zap className="w-3.5 h-3.5" /> Multi-Source Active
+        </span>
       </div>
 
-      {/* Quality Matrix (480p / 720p / 1080p) */}
-      <div className="space-y-4">
-        {qualityRows.map((row) => (
-          <div
-            key={row.label}
-            className="flex flex-col sm:flex-row sm:items-center gap-3 pb-3 border-b border-white/5 last:border-0 last:pb-0"
-          >
-            {/* Resolution Label */}
-            <div className="w-16 text-xs font-black text-slate-400 tracking-wider">
-              {row.label}
-            </div>
+      {/* Grid of Available Server Options */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {servers.map((srv) => {
+          const isActive = activeServerId === srv.id;
 
-            {/* Server Pill Buttons */}
-            <div className="flex flex-wrap items-center gap-2.5">
-              {row.servers.map((srv) => {
-                const isActive =
-                  activeServerId === srv.id ||
-                  (row.label === "1080P" && activeServerId === "srv-1" && srv.provider === "Wibufile") ||
-                  (row.label === "720P" && activeServerId === "srv-2" && srv.provider === "Wibufile") ||
-                  (row.label === "480P" && activeServerId === "srv-4" && srv.provider === "Wibufile");
-
-                return (
-                  <button
-                    key={srv.id}
-                    onClick={() => {
-                      // Map to available server id
-                      const targetId = srv.id.includes("480")
-                        ? "srv-4"
-                        : srv.id.includes("720")
-                        ? "srv-2"
-                        : "srv-1";
-                      onSelectServer(targetId);
-                    }}
-                    className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
+          return (
+            <button
+              key={srv.id}
+              onClick={() => onSelectServer(srv.id)}
+              className={`p-3.5 rounded-md text-left transition-all duration-200 cursor-pointer border flex flex-col justify-between gap-2 relative ${
+                isActive
+                  ? "bg-[#F47521]/15 border-[#F47521] shadow-lg shadow-[#F47521]/20"
+                  : "bg-[#141519] hover:bg-[#2a2c34] border-white/5 text-zinc-300 hover:border-white/15"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span
+                  className={`text-xs font-black truncate ${
+                    isActive ? "text-[#F47521]" : "text-white"
+                  }`}
+                >
+                  {srv.name.split("•")[0].trim()}
+                </span>
+                {srv.tag && (
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded font-black uppercase tracking-wider ${
                       isActive
-                        ? "bg-violet-600 text-white shadow-lg shadow-violet-600/40 scale-105"
-                        : "bg-[#121735] hover:bg-[#1a2046] text-slate-300 border border-white/5 hover:border-white/10"
+                        ? "bg-[#F47521] text-black"
+                        : "bg-white/10 text-zinc-300"
                     }`}
                   >
-                    {srv.name}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+                    {srv.tag}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                <span>{srv.quality}</span>
+                <span className="font-bold text-[#F47521]">SUB INDO</span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Notice info */}
+      <div className="pt-1 flex items-center gap-2 text-xs text-zinc-400">
+        <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+        <span>Jika server mengalami buffering, silakan ganti ke server alternatif di atas untuk kelancaran menonton.</span>
       </div>
     </div>
   );

@@ -173,17 +173,6 @@ export interface WatchlistItem {
   addedAt: number;
 }
 
-export interface CommentItem {
-  id: string;
-  animeId: number;
-  episodeNum: number;
-  username: string;
-  avatarUrl: string;
-  content: string;
-  isSpoiler: boolean;
-  likes: number;
-  createdAt: number;
-}
 
 export interface VideoServer {
   id: string;

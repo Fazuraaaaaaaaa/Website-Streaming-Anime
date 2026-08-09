@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { data: [], error: "Gagal mengambil data pencarian" },
-      { status: 500 }
+      { status: 200 } // Always return 200 to prevent SWR errors
     );
   }
 }

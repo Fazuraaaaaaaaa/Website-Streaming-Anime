@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { History, Play, Trash2, Clock, Sparkles, ArrowRight, RotateCcw } from "lucide-react";
+import { History, Play, Trash2, Sparkles, ArrowRight } from "lucide-react";
 import { useWatchHistory } from "@/hooks/useWatchHistory";
 
 export default function HistoryPage() {
@@ -37,13 +37,13 @@ export default function HistoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <History className="w-6 h-6" style={{ color: "var(--accent)" }} />
-            <h1 className="text-2xl sm:text-3xl font-extrabold" style={{ color: "var(--text-primary)" }}>
+            <History className="w-6 h-6 text-[#F47521]" />
+            <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-wider text-white">
               Riwayat Tontonan
             </h1>
           </div>
-          <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-            Lanjutkan menonton anime dari menit terakhir yang kamu tinggalkan.
+          <p className="text-xs text-zinc-400 font-bold uppercase tracking-wider">
+            Lanjutkan menonton anime dari menit terakhir yang kamu tinggalkan di RafQ Dev.
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export default function HistoryPage() {
                 clearHistory();
               }
             }}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 border border-rose-500/30 transition-colors self-start cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 rounded text-xs font-black uppercase tracking-wider text-rose-400 hover:bg-rose-500/10 border border-rose-500/30 transition-colors self-start cursor-pointer"
           >
             <Trash2 className="w-3.5 h-3.5" /> Hapus Semua Riwayat
           </button>
@@ -65,28 +65,23 @@ export default function HistoryPage() {
       {!isLoaded ? (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-28 rounded-2xl animate-pulse bg-white/5" />
+            <div key={i} className="h-28 rounded animate-pulse bg-white/5" />
           ))}
         </div>
       ) : history.length === 0 ? (
-        <div
-          className="p-12 text-center rounded-3xl backdrop-blur-md max-w-lg mx-auto"
-          style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}
-        >
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-               style={{ background: "var(--accent-soft)", border: "2px solid var(--accent)" }}>
-            <History className="w-8 h-8" style={{ color: "var(--accent)" }} />
+        <div className="p-12 text-center rounded bg-[#23252b] border border-white/5 max-w-lg mx-auto">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-[#F47521]/15 border border-[#F47521]">
+            <History className="w-8 h-8 text-[#F47521]" />
           </div>
-          <h3 className="text-lg font-bold mb-2" style={{ color: "var(--text-primary)" }}>
+          <h3 className="text-lg font-black uppercase tracking-wider mb-2 text-white">
             Belum Ada Riwayat Tontonan
           </h3>
-          <p className="text-xs sm:text-sm max-w-sm mx-auto mb-6" style={{ color: "var(--text-muted)" }}>
+          <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto mb-6">
             Anime yang kamu tonton akan otomatis tercatat di sini sehingga kamu bisa melanjutkan kapan saja.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-bold text-white transition-all hover:scale-105 shadow-lg shadow-violet-500/20"
-            style={{ background: "linear-gradient(135deg, var(--accent), #6d28d9)" }}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded text-xs sm:text-sm font-black uppercase tracking-wider text-black bg-[#F47521] hover:bg-[#FF640A] transition-all shadow-lg shadow-[#F47521]/30"
           >
             <Sparkles className="w-4 h-4" /> Mulai Nonton Anime
           </Link>
@@ -96,11 +91,10 @@ export default function HistoryPage() {
           {history.map((item) => (
             <div
               key={item.animeId}
-              className="group relative flex gap-4 p-3.5 sm:p-4 rounded-2xl transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-violet-500/10"
-              style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}
+              className="group relative flex gap-4 p-3.5 sm:p-4 rounded transition-all duration-200 bg-[#23252b] border border-white/5 hover:border-[#F47521] shadow-xl"
             >
               {/* Thumbnail with progress overlay */}
-              <div className="relative w-28 sm:w-36 aspect-[16/10] rounded-xl overflow-hidden shrink-0">
+              <div className="relative w-28 sm:w-36 aspect-[16/10] rounded overflow-hidden shrink-0">
                 <Image
                   src={item.animeImage}
                   alt={item.animeTitle}
@@ -111,20 +105,18 @@ export default function HistoryPage() {
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <Link
                     href={`/anime/${item.animeId}/watch?ep=${item.episodeNum}`}
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg"
-                    style={{ background: "linear-gradient(135deg, var(--accent), #6d28d9)" }}
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-black bg-[#F47521] shadow-lg"
                   >
-                    <Play className="w-5 h-5 fill-white ml-0.5" />
+                    <Play className="w-5 h-5 fill-black ml-0.5" />
                   </Link>
                 </div>
 
                 {/* Progress bar at bottom of thumbnail */}
                 <div className="absolute inset-x-0 bottom-0 h-1.5 bg-black/60">
                   <div
-                    className="h-full transition-all"
+                    className="h-full transition-all bg-[#F47521]"
                     style={{
                       width: `${item.progressPercent}%`,
-                      background: "linear-gradient(90deg, var(--accent), #a855f7)",
                     }}
                   />
                 </div>
@@ -135,40 +127,39 @@ export default function HistoryPage() {
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <Link href={`/anime/${item.animeId}`}>
-                      <h3 className="text-xs sm:text-sm font-bold line-clamp-1 hover:text-violet-400 transition-colors"
-                          style={{ color: "var(--text-primary)" }}>
+                      <h3 className="text-xs sm:text-sm font-black text-white line-clamp-1 hover:text-[#F47521] transition-colors">
                         {item.animeTitle}
                       </h3>
                     </Link>
                     <button
                       onClick={() => removeFromHistory(item.animeId)}
-                      className="p-1 rounded-md text-white/40 hover:text-rose-400 transition-colors cursor-pointer shrink-0"
+                      className="p-1 rounded text-zinc-500 hover:text-rose-400 transition-colors cursor-pointer shrink-0"
                       title="Hapus dari riwayat"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
-                  <p className="text-xs font-semibold mt-1" style={{ color: "var(--accent)" }}>
+                  <p className="text-xs font-black uppercase text-[#F47521] mt-1">
                     Episode {item.episodeNum} {item.episodeTitle ? `· ${item.episodeTitle}` : ""}
                   </p>
 
-                  <div className="flex items-center gap-2 mt-1.5 text-[11px]" style={{ color: "var(--text-muted)" }}>
-                    <span className="font-mono text-white/80 font-medium">
+                  <div className="flex items-center gap-2 mt-1.5 text-[11px] text-zinc-400">
+                    <span className="font-mono text-zinc-200 font-bold">
                       {formatTime(item.currentTime)} / {formatTime(item.duration)}
                     </span>
                     <span>({item.progressPercent}%)</span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-2 pt-2 border-t mt-2" style={{ borderColor: "var(--border)" }}>
-                  <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10 mt-2">
+                  <span className="text-[10px] text-zinc-500">
                     Ditonton {formatTimeAgo(item.updatedAt)}
                   </span>
 
                   <Link
                     href={`/anime/${item.animeId}/watch?ep=${item.episodeNum}`}
-                    className="flex items-center gap-1 text-xs font-bold text-violet-400 hover:underline"
+                    className="flex items-center gap-1 text-xs font-black uppercase text-[#F47521] hover:underline"
                   >
                     Lanjutkan <ArrowRight className="w-3.5 h-3.5" />
                   </Link>

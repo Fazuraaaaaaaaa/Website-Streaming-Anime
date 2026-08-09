@@ -5,8 +5,8 @@ import AnimeCard from "@/components/anime/AnimeCard";
 import { TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Anime Ongoing",
-  description: "Daftar anime yang sedang tayang musim ini di AnimeHub.",
+  title: "Anime Ongoing Sub Indo — RafQ Dev",
+  description: "Daftar anime yang sedang tayang musim ini Sub Indo di RafQ Dev.",
 };
 
 interface OngoingPageProps {
@@ -33,15 +33,14 @@ export default async function OngoingPage({ searchParams }: OngoingPageProps) {
     <div className="container-main py-8">
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-lg flex items-center justify-center"
-             style={{ background: 'var(--accent-soft)', border: '1px solid rgba(139, 92, 246, 0.3)' }}>
-          <TrendingUp className="w-5 h-5" style={{ color: 'var(--accent)' }} />
+        <div className="w-10 h-10 rounded flex items-center justify-center bg-[#F47521]/15 border border-[#F47521]/30">
+          <TrendingUp className="w-5 h-5 text-[#F47521]" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-            Anime Ongoing
+          <h1 className="text-2xl font-black uppercase tracking-wider text-white">
+            Anime Ongoing (Sub Indo)
           </h1>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-xs text-zinc-400 font-bold uppercase tracking-wider mt-0.5">
             Anime yang sedang tayang saat ini
             {pagination && ` · ${pagination.items?.total || 0} anime`}
           </p>
@@ -57,7 +56,7 @@ export default async function OngoingPage({ searchParams }: OngoingPageProps) {
         </div>
       ) : (
         <div className="text-center py-20">
-          <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-lg text-zinc-400">
             Tidak ada anime ongoing ditemukan.
           </p>
         </div>
@@ -69,27 +68,24 @@ export default async function OngoingPage({ searchParams }: OngoingPageProps) {
           {page > 1 && (
             <a
               href={`/ongoing?page=${page - 1}`}
-              className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
-              style={{ color: 'var(--text-primary)', border: '1px solid var(--border)' }}
+              className="px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-colors hover:bg-white/5 text-white border border-white/10"
             >
               ← Sebelumnya
             </a>
           )}
 
-          <span className="px-4 py-2 rounded-lg text-sm font-bold"
-                style={{ background: 'var(--accent)', color: 'white' }}>
+          <span className="px-4 py-2 rounded text-xs font-black uppercase tracking-wider bg-[#F47521] text-black">
             {page}
           </span>
 
-          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
+          <span className="text-xs font-bold text-zinc-400">
             / {pagination.last_visible_page}
           </span>
 
           {pagination.has_next_page && (
             <a
               href={`/ongoing?page=${page + 1}`}
-              className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
-              style={{ color: 'var(--text-primary)', border: '1px solid var(--border)' }}
+              className="px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-colors hover:bg-white/5 text-white border border-white/10"
             >
               Selanjutnya →
             </a>

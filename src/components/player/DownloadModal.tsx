@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { X, Download, HardDrive, Check, ExternalLink, Sparkles } from "lucide-react";
+import { X, Download, HardDrive, Check, ExternalLink, Sparkles, Video } from "lucide-react";
+import { VideoServer } from "@/lib/types";
 
 interface DownloadModalProps {
   isOpen: boolean;
   onClose: () => void;
   animeTitle: string;
   episodeNum: string | number;
+  activeServer?: VideoServer;
 }
 
 export default function DownloadModal({
@@ -15,61 +17,64 @@ export default function DownloadModal({
   onClose,
   animeTitle,
   episodeNum,
+  activeServer,
 }: DownloadModalProps) {
   const [downloadingQuality, setDownloadingQuality] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const downloadOptions = [
-    { quality: "360p SD", size: "~85 MB", server: "Google Drive / Mega", ext: "MP4", desc: "Hemat kuota & cepat unduh" },
-    { quality: "480p SD", size: "~140 MB", server: "Google Drive / Mega", ext: "MP4", desc: "Kualitas standar ponsel" },
-    { quality: "720p HD", size: "~285 MB", server: "Fast Direct CDN / Mega", ext: "MP4", desc: "Kualitas tajam rekomendasi", popular: true },
-    { quality: "1080p FHD", size: "~550 MB", server: "High Speed CDN / GDrive", ext: "MKV x265", desc: "Audio visual maksimal 60fps" },
+    { quality: "720p HD", size: "Bervariasi", server: "Premium Downloader", ext: "MP4", desc: "Kualitas tajam standar" },
+    { quality: "1080p FHD", size: "Bervariasi", server: "VIP Downloader", ext: "MP4", desc: "Kualitas tertinggi", popular: true },
   ];
 
   const handleDownload = (quality: string) => {
     setDownloadingQuality(quality);
     setTimeout(() => {
-      // Trigger a simulated file download or alert
-      const link = document.createElement("a");
-      link.href = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-      link.download = `${animeTitle.replace(/[^a-zA-Z0-9]/g, "_")}_EP${episodeNum}_${quality.replace(" ", "_")}.mp4`;
-      link.target = "_blank";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Ekstrak ID YouTube jika menggunakan server YouTube
+      let ytVideoId = "";
+      if (activeServer?.url?.includes("youtube.com/embed/")) {
+        ytVideoId = activeServer.url.split("embed/")[1].split("?")[0];
+      }
+
+      const queryTitle = `${animeTitle} Episode ${episodeNum} Sub Indo`;
+      
+      let redirectUrl = "";
+      if (ytVideoId) {
+        // Redirect ke pengunduh YouTube populer menggunakan Video ID
+        redirectUrl = `https://ssyoutube.com/en731ve/youtube-video-downloader?url=https://www.youtube.com/watch?v=${ytVideoId}`;
+      } else {
+        // Fallback pencarian generik
+        redirectUrl = `https://www.google.com/search?q=Download+${encodeURIComponent(queryTitle)}+MP4`;
+      }
+
+      window.open(redirectUrl, "_blank");
       setDownloadingQuality(null);
+      onClose();
     }, 800);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-      <div
-        className="relative w-full max-w-lg rounded-2xl p-6 shadow-2xl overflow-hidden"
-        style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border)",
-          boxShadow: "0 25px 50px -12px rgba(124, 58, 237, 0.25)",
-        }}
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-lg rounded-md p-6 shadow-2xl bg-[#23252b] border border-white/10">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b" style={{ borderColor: "var(--border)" }}>
+        <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg" style={{ background: "var(--accent-soft)" }}>
-              <Download className="w-5 h-5" style={{ color: "var(--accent)" }} />
+            <div className="p-2 rounded bg-[#F47521]/15">
+              <Download className="w-5 h-5 text-[#F47521]" />
             </div>
             <div>
-              <h3 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
-                Download Episode {episodeNum}
+              <h3 className="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+                Download <Video className="w-4 h-4 text-red-500" />
               </h3>
-              <p className="text-xs truncate max-w-xs" style={{ color: "var(--text-muted)" }}>
-                {animeTitle}
+              <p className="text-xs truncate max-w-xs text-zinc-400">
+                {animeTitle} - Episode {episodeNum}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -77,50 +82,44 @@ export default function DownloadModal({
 
         {/* Quality Options */}
         <div className="py-4 space-y-2.5">
-          <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+          <p className="text-xs font-black uppercase tracking-wider text-zinc-400">
             Pilih Resolusi Video
           </p>
 
           {downloadOptions.map((opt) => (
             <div
               key={opt.quality}
-              className={`relative flex items-center justify-between p-3.5 rounded-xl transition-all duration-200 ${
-                opt.popular ? "ring-1 ring-violet-500/50" : ""
+              className={`relative flex items-center justify-between p-3.5 rounded transition-all duration-200 bg-[#141519] border ${
+                opt.popular ? "border-[#F47521] shadow-md shadow-[#F47521]/10" : "border-white/5"
               }`}
-              style={{
-                background: opt.popular ? "rgba(124, 58, 237, 0.08)" : "var(--bg-secondary)",
-                border: "1px solid var(--border)",
-              }}
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+                  <span className="text-sm font-bold text-white">
                     {opt.quality}
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/80 font-mono">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-zinc-300 font-mono">
                     {opt.ext}
                   </span>
                   {opt.popular && (
-                    <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 font-semibold">
+                    <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded font-black uppercase bg-[#F47521] text-black">
                       <Sparkles className="w-3 h-3" /> Rekomendasi
                     </span>
                   )}
                 </div>
-                <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-                  Ukuran: <span className="font-semibold text-white/90">{opt.size}</span> · {opt.desc}
+                <p className="text-xs mt-0.5 text-zinc-400">
+                  Ukuran: <span className="font-semibold text-zinc-200">{opt.size}</span> · {opt.desc}
                 </p>
               </div>
 
               <button
                 onClick={() => handleDownload(opt.quality)}
                 disabled={downloadingQuality === opt.quality}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all hover:opacity-90 active:scale-95 cursor-pointer shrink-0 ml-3"
-                style={{
-                  background: opt.popular
-                    ? "linear-gradient(135deg, var(--accent), #6d28d9)"
-                    : "var(--bg-card)",
-                  border: opt.popular ? "none" : "1px solid var(--border)",
-                }}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded text-xs font-black uppercase tracking-wider transition-all cursor-pointer shrink-0 ml-3 ${
+                  opt.popular
+                    ? "bg-[#F47521] hover:bg-[#FF640A] text-black shadow-md shadow-[#F47521]/30"
+                    : "bg-[#23252b] hover:bg-[#2e3038] text-white border border-white/10"
+                }`}
               >
                 {downloadingQuality === opt.quality ? (
                   <>
@@ -137,18 +136,14 @@ export default function DownloadModal({
         </div>
 
         {/* Batch download info */}
-        <div
-          className="p-3 rounded-xl flex items-center justify-between text-xs mt-2"
-          style={{ background: "rgba(255, 255, 255, 0.03)", border: "1px dashed var(--border)" }}
-        >
+        <div className="p-3 rounded flex items-center justify-between text-xs bg-white/5 border border-dashed border-white/10">
           <div className="flex items-center gap-2">
-            <HardDrive className="w-4 h-4 text-amber-400" />
-            <span style={{ color: "var(--text-muted)" }}>Download Batch All Episodes (.zip)</span>
+            <HardDrive className="w-4 h-4 text-[#FAB818]" />
+            <span className="text-zinc-300">Download Batch All Episodes (.zip)</span>
           </div>
           <button
             onClick={() => handleDownload("Batch Zip")}
-            className="flex items-center gap-1 text-xs font-semibold hover:underline"
-            style={{ color: "var(--accent)" }}
+            className="flex items-center gap-1 text-xs font-bold text-[#F47521] hover:underline cursor-pointer"
           >
             Pilih Server <ExternalLink className="w-3 h-3" />
           </button>

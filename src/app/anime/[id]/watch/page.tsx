@@ -20,16 +20,16 @@ export async function generateMetadata({ params, searchParams }: WatchPageProps)
     const anime = res.data;
     const title = anime.title_english || anime.title;
     return {
-      title: `Nonton ${title} Episode ${episodeNum} Sub Indo`,
-      description: `Streaming & download gratis anime ${title} Episode ${episodeNum} subtitle Indonesia resolusi 360p, 480p, 720p, 1080p di AnimeHub.`,
+      title: `Nonton ${title} Episode ${episodeNum} Sub Indo — RafQ Dev`,
+      description: `Streaming & nonton anime ${title} Episode ${episodeNum} Subtitle Indonesia gratis kualitas HD 1080p di RafQ Dev.`,
       openGraph: {
-        title: `Nonton ${title} Episode ${episodeNum} Sub Indo - AnimeHub`,
+        title: `Nonton ${title} Episode ${episodeNum} Sub Indo — RafQ Dev`,
         description: anime.synopsis?.slice(0, 160) || `Nonton ${title} Episode ${episodeNum}`,
         images: [anime.images.webp?.large_image_url || anime.images.jpg.large_image_url],
       },
     };
   } catch {
-    return { title: `Nonton Anime Episode ${episodeNum} - AnimeHub` };
+    return { title: `Nonton Anime Episode ${episodeNum} Sub Indo — RafQ Dev` };
   }
 }
 
@@ -70,16 +70,15 @@ export default async function WatchPage({ params, searchParams }: WatchPageProps
   if (!anime) {
     return (
       <div className="container-main py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4" style={{ color: "var(--text-primary)" }}>
+        <h1 className="text-2xl font-black mb-4 text-white uppercase tracking-wider">
           Anime Tidak Ditemukan
         </h1>
-        <p style={{ color: "var(--text-muted)" }}>
+        <p className="text-zinc-400">
           Data streaming anime ini tidak tersedia atau gagal dimuat.
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-full text-sm font-semibold text-white"
-          style={{ background: "var(--accent)" }}
+          className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded text-xs font-black uppercase tracking-wider text-black bg-[#F47521] hover:bg-[#FF640A] transition-all"
         >
           <ArrowLeft className="w-4 h-4" /> Kembali ke Beranda
         </Link>

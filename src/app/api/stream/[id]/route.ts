@@ -1,7 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { VideoServer } from "@/lib/types";
-import ytSearch from "yt-search";
 import { getOtakudesuStream } from "@/lib/otakudesu";
+
+// Native YouTube scraper to replace yt-search which crashes Vercel Edge functions
+async function simpleYtSearch(query: string) {
+  try {
+    const res = await fetch(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      }
+    });
+    const html = await res.text();
+    const match = html.match(/var ytInitialData = ({.*?});<\/script>/);
+    if (!match) return { videos: [] };
+    
+    const data = JSON.parse(match[1]);
+    const contents = data.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents[0]?.itemSectionRenderer?.contents || [];
+    
+    const videos = [];
+    for (const item of contents) {
+      if (item.videoRenderer) {
+        const lengthText = item.videoRenderer.lengthText?.simpleText || "0:00";
+        const parts = lengthText.split(':').map(Number);
+        let seconds = 0;
+        if (parts.length === 3) seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+        else if (parts.length === 2) seconds = parts[0] * 60 + parts[1];
+        
+        videos.push({
+          videoId: item.videoRenderer.videoId,
+          seconds: seconds
+        });
+      }
+    }
+    return { videos };
+  } catch (e) {
+    console.error("Native ytSearch error:", e);
+    return { videos: [] };
+  }
+}
 
 export async function GET(
   request: NextRequest,
@@ -50,9 +86,9 @@ export async function GET(
 
     const fallbackYt = { videos: [] } as any;
     const [res1, res2, res3] = await Promise.all([
-      withTimeout(ytSearch(queries[0]), 4000, fallbackYt),
-      withTimeout(ytSearch(queries[1]), 4000, fallbackYt),
-      withTimeout(ytSearch(queries[2]), 4000, fallbackYt)
+      withTimeout(simpleYtSearch(queries[0]), 4000, fallbackYt),
+      withTimeout(simpleYtSearch(queries[1]), 4000, fallbackYt),
+      withTimeout(simpleYtSearch(queries[2]), 4000, fallbackYt)
     ]);
     
     const filterEpisode = (videos: any[]) => {
